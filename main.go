@@ -11,20 +11,6 @@ import (
 const SERVERPORT = ":5000"
 
 func main() {
-	/*
-		ratesFile, err := os.ReadFile("priceDB.json")
-
-			if err != nil {
-				panic("Unable to load JSON file!")
-			}
-			decodedRates := JSONFileToJSONRates(ratesFile)
-			AllDailyRates := AllJSONRatesToDailyRates(decodedRates)
-
-			for _, dailyRate := range AllDailyRates {
-				fmt.Println(dailyRate)
-			}
-	*/
-
 	//load the Database from the initial seeded values
 	LoadInitialSeededDataToPriceDB()
 
@@ -73,8 +59,7 @@ TODO:
 	a. https://stackoverflow.com/questions/17306358/removing-fields-from-struct-or-hiding-them-in-json-response
 	b. can return price field more easily with map[string]interface{}
 2. account for seconds in query
-
-
-Comments:
-1. Potentially refactor JSON marshal to encode
+3. HTTP Tests
+4. Packaging (refactor into folders? gomod?)
+5. README - Include any instructions on how to build, run, and test your application
 */
