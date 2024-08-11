@@ -42,8 +42,9 @@ var JSONWEEKDAY = map[string]time.Weekday{
 }
 
 // GET /price: return JSON for price given time query
-// ex query: http://localhost:5000/price?start=2015-07-01T07:00:00-05:00&end=2015-07-01T12:00:00-05:00
-// second ex: http://localhost:5000/price?start=2015-07-01T01:00:00-05:00&end=2015-07-01T05:00:00-05:00
+// ex query: http://localhost:5000/price?start=2015-07-01T07:00:00-05:00&end=2015-07-01T12:00:00-05:00 //"1750"
+// second ex: http://localhost:5000/price?start=2015-07-01T01:00:00-05:00&end=2015-07-01T05:00:00-05:00 //"1000"
+// third ex: http://localhost:5000/price?start=2015-07-01T19:00:00-05:00&end=2015-07-01T20:00:00-05:00 //"unavailable"
 func priceURL(w http.ResponseWriter, r *http.Request) {
 	startStr := r.URL.Query().Get("start")
 	endStr := r.URL.Query().Get("end")
@@ -62,14 +63,11 @@ func priceURL(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//fmt.Fprintln(os.Stdout, []any{startTime, endTime}...)
-
 	// check if input wrong
 	if endTime.After(startTime) { //check test case if equal or earlier
 		//if input spans more than a day //assuming non-converted time
 		if startTime.Day() != endTime.Day() {
-			w.Header().Set("Content-Type", "application/json")
-			json.NewEncoder(w).Encode("unavailable") //return as JSON?
+			httpResponseOfUnavailable(w) //return as JSON?
 			return
 		}
 	} else {
@@ -79,14 +77,13 @@ func priceURL(w http.ResponseWriter, r *http.Request) {
 
 	// read the JSON file
 	ratesFile, err := os.ReadFile("testing.json")
-
 	if err != nil {
-		panic("Unable to load JSON file!")
+		httpResponseOfUnavailable(w)
+		return
 	}
 
 	//look through the time bands //input can't span more 2 time bands //assuming DB time zone?
-	decodedRates := JSONFileToJSONRates(ratesFile) //#refactor if price not taken from here
-	AllDailyRates := AllJSONRatesToDailyRates(decodedRates)
+	AllDailyRates := AllJSONRatesToDailyRates(JSONFileToJSONRates(ratesFile))
 
 	for _, dailyRate := range AllDailyRates {
 		convertedStartTime := startTime.In(dailyRate.StartTime.Location())
@@ -114,8 +111,14 @@ func priceURL(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	}
+	httpResponseOfUnavailable(w)
+}
+
+// returns "unavailable" as a JSON response
+func httpResponseOfUnavailable(w http.ResponseWriter) http.ResponseWriter {
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode("unavailable") //return as JSON?
+	json.NewEncoder(w).Encode("unavailable")
+	return w
 }
 
 // Decodes JSON file into JSONRates struct
@@ -187,6 +190,7 @@ func JSONRateTimeToTimeTime(inputTime string, timeZone string) time.Time {
 		panic("timeZone input incorrect")
 	}
 
+	//broke convention for readability
 	completedTime := time.Date(2000, time.January, 1, hour, minute, 0, 0, location)
 
 	return completedTime
