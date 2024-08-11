@@ -30,8 +30,9 @@ func getAllRates(w http.ResponseWriter, r *http.Request) {
 }
 
 // test w/: curl -X PUT -H "Content-Type: application/json" -d '{"key1":"value"}' http://localhost:5000/rates
-// PUT Method:
+// PUT Method: Replaces JSON DB with new input JSON DB
 func updateRate(w http.ResponseWriter, r *http.Request) {
-	panic("ignore")
+
+	//panic("ignore")
 	//ratesFile, err := os.WriteFile("testing.json")
 }
