@@ -76,14 +76,21 @@ func priceURL(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// read the JSON file
-	ratesFile, err := os.ReadFile("testing.json")
+	ratesFile, err := os.Open("priceDB.json")
 	if err != nil {
 		httpResponseOfUnavailable(w)
 		return
 	}
+	defer ratesFile.Close()
 
 	//look through the time bands //input can't span more 2 time bands //assuming DB time zone?
-	AllDailyRates := AllJSONRatesToDailyRates(JSONFileToJSONRates(ratesFile))
+	allJSONRates, err := JSONFileToJSONRates(ratesFile)
+
+	if err != nil {
+		httpResponseOfUnavailable(w)
+		return
+	}
+	AllDailyRates := AllJSONRatesToDailyRates(allJSONRates.Rates)
 
 	for _, dailyRate := range AllDailyRates {
 		convertedStartTime := startTime.In(dailyRate.StartTime.Location())
@@ -112,25 +119,6 @@ func priceURL(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	httpResponseOfUnavailable(w)
-}
-
-// returns "unavailable" as a JSON response
-func httpResponseOfUnavailable(w http.ResponseWriter) http.ResponseWriter {
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode("unavailable")
-	return w
-}
-
-// Decodes JSON file into JSONRates struct
-func JSONFileToJSONRates(ratesFile []byte) []JSONRate {
-	var decodedJSONRates AllJSONRates
-	err := json.Unmarshal(ratesFile, &decodedJSONRates)
-
-	if err != nil {
-		panic("JSON decode error!")
-	}
-
-	return decodedJSONRates.Rates
 }
 
 // Converts decoded JSONRate slice into DailyRate slice for easier date and time lookup
