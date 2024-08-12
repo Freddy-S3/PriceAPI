@@ -1,5 +1,7 @@
 # PriceAPI
- 
+
+https://github.com/spothero/be-code-challenge/tree/main?tab=readme-ov-file
+
 Guide questions:
 What was your motivation?
 Why did you build this project?
