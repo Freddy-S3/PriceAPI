@@ -1,11 +1,12 @@
 package main
 
 import (
-	"encoding/json"
-	"io"
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/Freddy-S3/PriceAPI/price"
+	"github.com/Freddy-S3/PriceAPI/rates"
 )
 
 const SERVERPORT = ":5000"
@@ -15,8 +16,8 @@ func main() {
 	loadInitialSeededDataToPriceDB()
 
 	// Create HTTP server to handle "price" and "rates" endpoints
-	http.HandleFunc("/rates", ratesURL) //GET and PUT
-	http.HandleFunc("/price", priceURL) //GET
+	http.HandleFunc("/rates", rates.RatesURL) //GET and PUT
+	http.HandleFunc("/price", price.PriceURL) //GET
 	log.Println("Server running on port" + SERVERPORT)
 	log.Fatal(http.ListenAndServe(SERVERPORT, nil))
 }
@@ -28,24 +29,6 @@ func loadInitialSeededDataToPriceDB() {
 		panic("Unable to load initialSeededJSON file!")
 	}
 	os.WriteFile("priceDB.json", ratesFile, os.ModePerm)
-}
-
-// Returns "unavailable" as a JSON response
-func HttpResponseOfUnavailable(w http.ResponseWriter) http.ResponseWriter {
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode("unavailable")
-	return w
-}
-
-// Decodes JSON file into JSONRates struct
-func JSONFileToJSONRates(ratesFile io.Reader) (AllJSONRates, error) {
-	var decodedJSONRates AllJSONRates
-	err := json.NewDecoder(ratesFile).Decode(&decodedJSONRates)
-	if err != nil {
-		return AllJSONRates{}, err
-	}
-
-	return decodedJSONRates, nil
 }
 
 /*
