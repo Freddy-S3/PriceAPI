@@ -20,7 +20,7 @@ func ratesURL(w http.ResponseWriter, r *http.Request) {
 func getAllRates(w http.ResponseWriter, r *http.Request) {
 	ratesFile, err := os.ReadFile("priceDB.json")
 	if err != nil {
-		httpResponseOfUnavailable(w)
+		HttpResponseOfUnavailable(w)
 		return
 	}
 
@@ -35,14 +35,14 @@ func updateRate(w http.ResponseWriter, r *http.Request) {
 	// Decode HTTP Request
 	allJSONRates, err := JSONFileToJSONRates(r.Body)
 	if err != nil {
-		httpResponseOfUnavailable(w)
+		http.Error(w, "Please check the formatting of the JSON input", http.StatusBadRequest)
 		return
 	}
 
 	// Open DB file in write mode and truncate old contents
 	ratesFile, err := os.OpenFile("priceDB.json", os.O_WRONLY|os.O_TRUNC, os.ModePerm)
 	if err != nil {
-		httpResponseOfUnavailable(w)
+		http.Error(w, "Unable to update the database", http.StatusBadRequest)
 		return
 	}
 	defer ratesFile.Close()
@@ -52,7 +52,7 @@ func updateRate(w http.ResponseWriter, r *http.Request) {
 	encoder.SetIndent("", "  ") //optional for readability
 	encoder.Encode(allJSONRates)
 
-	// Test if results successful
+	// Test if results successful //ask if required
 	// getAllRates(w, r)
 	// w.Write([]byte("JSON data saved successfully!"))
 }

@@ -11,18 +11,18 @@ import (
 const SERVERPORT = ":5000"
 
 func main() {
-	//load the Database from the initial seeded values
-	LoadInitialSeededDataToPriceDB()
+	// Load the Database from the initial seeded values
+	loadInitialSeededDataToPriceDB()
 
-	//Create HTTP server to handle "price" and "rates" endpoints
+	// Create HTTP server to handle "price" and "rates" endpoints
 	http.HandleFunc("/rates", ratesURL) //GET and PUT
 	http.HandleFunc("/price", priceURL) //GET
 	log.Println("Server running on port" + SERVERPORT)
 	log.Fatal(http.ListenAndServe(SERVERPORT, nil))
 }
 
-// loads original seeded data to the priceDB.json
-func LoadInitialSeededDataToPriceDB() {
+// Loads original seeded data to the priceDB.json
+func loadInitialSeededDataToPriceDB() {
 	ratesFile, err := os.ReadFile("initialSeededData.json")
 	if err != nil {
 		panic("Unable to load initialSeededJSON file!")
@@ -30,8 +30,8 @@ func LoadInitialSeededDataToPriceDB() {
 	os.WriteFile("priceDB.json", ratesFile, os.ModePerm)
 }
 
-// returns "unavailable" as a JSON response
-func httpResponseOfUnavailable(w http.ResponseWriter) http.ResponseWriter {
+// Returns "unavailable" as a JSON response
+func HttpResponseOfUnavailable(w http.ResponseWriter) http.ResponseWriter {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode("unavailable")
 	return w
@@ -50,9 +50,10 @@ func JSONFileToJSONRates(ratesFile io.Reader) (AllJSONRates, error) {
 
 /*
 Questions:
-1. input spanning more than 1 day in convertedTime or uncoverted time?
-	a. unconverted time spanning 24 hours or calendar day?
-2. can ignore seconds? or inclusive up till 59 seconds?
+1. Input spanning more than 1 day in convertedTime or uncoverted time?
+	a. Unconverted time spanning 24 hours or calendar day?
+	b. "Can span multiple rates" meaning rate overlap? or time band wide enough to be in 2 bands
+2. Can ignore seconds? or inclusive up till 59 seconds?
 
 TODO:
 1. refactor rate into interface?
@@ -62,4 +63,6 @@ TODO:
 3. HTTP Tests
 4. Packaging (refactor into folders? gomod?)
 5. README - Include any instructions on how to build, run, and test your application
+6. Test input for overlap?
+7. Potentially add channels?
 */

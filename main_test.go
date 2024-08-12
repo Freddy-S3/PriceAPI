@@ -34,9 +34,9 @@ func TestJSONRateToDailyRate(t *testing.T) {
 				Tz:    "America/Chicago",
 				Price: 1750,
 			}, DailyRate{
-				Weekdays:  JSONRateDaysToTimeWeekdaySlice("wed"),
-				StartTime: JSONRateTimeToTimeTime("0600", "America/Chicago"),
-				EndTime:   JSONRateTimeToTimeTime("1800", "America/Chicago"),
+				Weekdays:  jsonRateDaysToTimeWeekdaySlice("wed"),
+				StartTime: jsonRateTimeToTimeTime("0600", "America/Chicago"),
+				EndTime:   jsonRateTimeToTimeTime("1800", "America/Chicago"),
 				Price:     1750,
 			},
 		},
@@ -83,7 +83,7 @@ func TestJSONRateDaysToTimeWeekdaySlice(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		weekdays := JSONRateDaysToTimeWeekdaySlice(test.inputWeekday)
+		weekdays := jsonRateDaysToTimeWeekdaySlice(test.inputWeekday)
 		for index, weekday := range weekdays {
 			if weekday != test.result[index] {
 				t.Errorf("JSONRateDaysToTimeWeekdaySlice(%s)= %v; want %v", test.inputWeekday, weekdays, test.result)
@@ -108,7 +108,7 @@ func TestJSONRateTimeToTimeTime(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		time := JSONRateTimeToTimeTime(test.inputTime, test.inputTimeZone)
+		time := jsonRateTimeToTimeTime(test.inputTime, test.inputTimeZone)
 		if !time.Equal(test.result) {
 			t.Errorf("JSONRateTimeToTimeTime(%s, %s)= %v; want %v", test.inputTime, test.inputTimeZone, time, test.result)
 		}
@@ -128,7 +128,7 @@ func TestJSONRateTimesToStartAndEndTime(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		start, end := JSONRateTimesToStartAndEndTime(test.input)
+		start, end := jsonRateTimesToStartAndEndTime(test.input)
 		if start != test.startOutput || end != test.endOutput {
 			t.Errorf("JSONRateTimesToStartAndEndTime(%s)= %s, %s; want %s, %s", test.input, start, end, test.startOutput, test.endOutput)
 		}
