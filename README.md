@@ -2,11 +2,11 @@
 
 # Table of contents
 1. [Introduction](#introduction)
-2. [The Problem](#theProblem)
-3. [How to Use](#howToUse)
+2. [The problem](#theProblem)
+3. [How to use](#howToUse)
 4. [What I learned](#whatILearned)
 5. [What I ran out of time for](#whatIRanOutOfTimeFor)
-6. [Some Comments](#someComments)
+6. [Some comments](#someComments)
 
 
 
@@ -16,12 +16,12 @@ Thank you for taking the time to review me as an applicant!
 If you have any further questions, feel free to contact me at shaikhfh1@gmail.com
 
 
-## The Problem <a name="theProblem"></a>
+## The problem <a name="theProblem"></a>
 I decided it was better not to link or describe the problem for privacy reasons.
 I did however, leave the repo as public in case there were issues in the file submission process.
 
 
-## How to Use
+## How to use
 To test functionality, simply run the main.go file from your IDE of choice (I used VSCode),  
 and go to: http://localhost:5000/rates in your browser to access the `rates API`,  
 and go to: http://localhost:5000/price in your browser to access the `price API`. (Will require a query)  
@@ -53,7 +53,7 @@ Unfortunately I ran out of time before I was able to implement:
 - A better formatted README
 
 
-## Some Comments <a name="someComments"></a>
+## Some comments <a name="someComments"></a>
 - I intentionally used `net/http` instead of `gorilla/mux` for the handling of HTTP requests. I wanted to be sure to showcase that I can work with just the base packages for the sake of the assignment. However, if I were to continue building on this, or if this was not an assigment, I would use some framework like `gorilla/mux` to better handle server calls.
 
 - I assumed that the rate used in the data base is hourly, so `price API` will return the total cost for the requested time band. If I am supposed to just return a flat rate instead of total for an hourly rate, I could just alter lines 101-108 in price.go. Initially, I actually implemented the flat rate method.
