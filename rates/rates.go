@@ -11,7 +11,7 @@ import (
 // GET and PUT '/rates'
 func RatesURL(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
-		getAllRates(w, r)
+		getAllRates(w)
 	} else if r.Method == http.MethodPut {
 		updateRate(w, r)
 	}
@@ -19,7 +19,7 @@ func RatesURL(w http.ResponseWriter, r *http.Request) {
 
 // Test with: http://localhost:5000/rates
 // GET Method: gets all rates in the JSON DB priceDB.json
-func getAllRates(w http.ResponseWriter, r *http.Request) {
+func getAllRates(w http.ResponseWriter) {
 	ratesFile, err := os.ReadFile("priceDB.json")
 	if err != nil {
 		HttpResponseOfUnavailable(w)

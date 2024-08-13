@@ -1,24 +1,28 @@
 package main
 
-/*
-import "testing"
+import (
+	"os"
+	"testing"
+)
 
-func TestJSONRateDaysToTimeWeekdaySlice(t *testing.T) {
-	tests := []struct {
-		inputWeekday string
-		result       []time.Weekday
-	}{
-		{"mon,tues,thurs", []time.Weekday{time.Monday, time.Tuesday, time.Thursday}},
+// Loads the initial seeded data into the priceDB
+func TestLoadInitialSeededDataToPriceDB(t *testing.T) {
+	// load first, then test if loaded DB is same as initial
+	loadInitialSeededDataToPriceDB()
+
+	testResult, err := os.ReadFile("priceDB.json")
+	if err != nil {
+		t.Errorf("Unable to load priceDB.json")
 	}
 
-	for _, test := range tests {
-		weekdays := jsonRateDaysToTimeWeekdaySlice(test.inputWeekday)
-		for index, weekday := range weekdays {
-			if weekday != test.result[index] {
-				t.Errorf("JSONRateDaysToTimeWeekdaySlice(%s)= %v; want %v", test.inputWeekday, weekdays, test.result)
-			}
+	initialDB, err := os.ReadFile("initialSeededData.json")
+	if err != nil {
+		t.Errorf("Unable to load initialSeededData.json")
+	}
+
+	for index, resultBytes := range testResult {
+		if resultBytes != initialDB[index] {
+			t.Errorf("loadInitialSeededDataToPriceDB()= %v; want %v", testResult, initialDB)
 		}
 	}
-
 }
-*/

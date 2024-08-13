@@ -94,9 +94,19 @@ func PriceURL(w http.ResponseWriter, r *http.Request) {
 		// Look through each day of each daily rate #possible refactor for faster lookup, larger DB. Possible channel use
 		for _, weekDay := range dailyRate.Weekdays {
 			if convertedStartTime.Weekday() == weekDay {
-				// Extract hour and minute for comparison //#possible refactor to account for seconds
-				if convertedStartTime.Hour() >= dailyRate.StartTime.Hour() && convertedEndTime.Hour() <= dailyRate.EndTime.Hour() && convertedStartTime.Minute() >= dailyRate.StartTime.Minute() && convertedEndTime.Minute() <= dailyRate.EndTime.Minute() {
-					jsonRatePrice, _ := json.Marshal(dailyRate)
+				// Convert Rates into the same day as the request //This assumes that a rate will not span multiple days
+				convertedRateStartTime := time.Date(convertedStartTime.Year(), convertedStartTime.Month(), convertedStartTime.Day(), dailyRate.StartTime.Hour(), dailyRate.StartTime.Minute(), 0, 0, convertedStartTime.Location())
+				convertedRateEndTime := time.Date(convertedEndTime.Year(), convertedEndTime.Month(), convertedEndTime.Day(), dailyRate.EndTime.Hour(), dailyRate.EndTime.Minute(), 0, 0, convertedEndTime.Location())
+				if convertedStartTime.After(convertedRateStartTime) && convertedEndTime.Before(convertedRateEndTime) {
+					duration := convertedEndTime.Sub(convertedStartTime).Hours()
+					totalCost := float64(dailyRate.Price) * duration
+					returnStruct := DailyRate{
+						Weekdays:  dailyRate.Weekdays,
+						StartTime: dailyRate.StartTime,
+						EndTime:   dailyRate.EndTime,
+						Price:     int(totalCost), //this will round down
+					}
+					jsonRatePrice, _ := json.Marshal(returnStruct)
 					w.Header().Set("Content-Type", "application/json")
 					w.Write(jsonRatePrice)
 					return

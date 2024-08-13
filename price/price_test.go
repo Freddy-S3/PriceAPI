@@ -136,3 +136,13 @@ func TestJSONRateTimesToStartAndEndTime(t *testing.T) {
 		}
 	}
 }
+
+// incomplete Unit tests
+func TestAllJSONRatesToDailyRates(t *testing.T) {
+	//potentially reuse a unit test for individual JSONRates
+}
+
+func TestPriceURL(t *testing.T) {
+	//http response test
+	//import "net/http/httptest"
+}
