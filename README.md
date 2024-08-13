@@ -11,8 +11,8 @@
 
 
 ## Introduction <a name="introduction"></a>
-Hi, my name is `Freddy Shaikh`,
-Thank you for taking the time to review me as an applicant!
+Hi, my name is `Freddy Shaikh`,  
+Thank you for taking the time to review me as an applicant!  
 If you have any further questions, feel free to contact me at shaikhfh1@gmail.com
 
 
@@ -22,17 +22,17 @@ I did however, leave the repo as public in case there were issues in the file su
 
 
 ## How to Use
-To test functionality, simply run the main.go file from your IDE of choice (I used VSCode),
-and go to: http://localhost:5000/rates in your browser to access the `rates API`,
-and go to: http://localhost:5000/price in your browser to access the `price API`. (Will require a query)
+To test functionality, simply run the main.go file from your IDE of choice (I used VSCode),  
+and go to: http://localhost:5000/rates in your browser to access the `rates API`,  
+and go to: http://localhost:5000/price in your browser to access the `price API`. (Will require a query)  
 
-The `rates API` can take either a `GET` request which returns the priceDB.json file,
+The `rates API` can take either a `GET` request which returns the priceDB.json file as a Http response in JSON format,
 or a `PUT` request with the input being JSON data for new pricing info, which will save to priceDB.json.
 The default seeded values will be loaded in upon server start so `PUT` data will be lost upon server restart.
 
 The `price API` accepts queries such as `?start=2015-07-01T07:00:00-05:00&end=2015-07-01T12:22:00-05:00`,
-and returns the expected price for the duration given the hourly rate within the database.
-Example Query: `http://localhost:5000/price?start=2015-07-01T07:00:00-05:00&end=2015-07-01T12:00:00-05:00`
+and returns the expected price for the duration given the hourly rate within the database.  
+Example Query: `http://localhost:5000/price?start=2015-07-01T07:00:00-05:00&end=2015-07-01T12:00:00-05:00`  
 Expected Return in JSON: `{"price":8750}` 
 
 
